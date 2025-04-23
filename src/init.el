@@ -1173,7 +1173,8 @@ CUSTOM_ID of the entry is returned."
   (mapc #'disable-theme custom-enabled-themes)
   ;; Cargar el tema doom-acario-light
   (load-theme 'doom-acario-light t)
-  (setq loaded-theme-variant 'light))
+  (setq loaded-theme-variant 'light)
+  )
 
 (defun load-dark-theme ()
   "Carga el tema con colores oscuros."
@@ -1182,7 +1183,8 @@ CUSTOM_ID of the entry is returned."
   (mapc #'disable-theme custom-enabled-themes)
   ;; Cargar el tema doom-acario-light
   (load-theme 'doom-gruvbox t)
-  (setq loaded-theme-variant 'dark))
+  (setq loaded-theme-variant 'dark)
+  )
   
 (defun toggle-theme-variant ()
   "Cambia de tema claro a oscuro y viceversa."
@@ -1264,3 +1266,116 @@ PATH, VAR y VALUE vienen de D-Bus."
   :config
   ;; Aquí puedes añadir configuraciones específicas si lo necesitas
 )
+
+(add-hook 'text-mode-hook 'visual-line-mode)
+(add-hook 'prog-mode-hook 'visual-line-mode)
+(load-theme 'catppuccin :no-confirm)
+
+
+;;; COnfig Personal
+(require 'autoinsert)
+(auto-insert-mode 1)
+(setq auto-insert-directory "~/.emacs.d/templates/")
+(define-auto-insert "\\.org\\'" "default-org-template.org")
+
+;; Instalar org-bullets
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode))
+
+
+;; use-package with Elpaca:
+(use-package dashboard
+  :ensure t
+  :config
+  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+  (dashboard-setup-startup-hook))
+(setq initial-buffer-choice (lambda () (get-buffer-create dashboard-buffer-name)))
+
+(add-to-list 'dashboard-items '(agenda) t)
+(setq dashboard-week-agenda t)
+(setq dashboard-filter-agenda-entry 'dashboard-no-filter-agenda)
+
+
+;;; Config Emacs
+;; Set the title
+(setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+;; Set the banner
+(setq dashboard-startup-banner 'logo)
+;; Value can be:
+;;  - 'official which displays the official emacs logo.
+;;  - 'logo which displays an alternative emacs logo.
+;;  - an integer which displays one of the text banners
+;;    (see dashboard-banners-directory files).
+;;  - a string that specifies a path for a custom banner
+;;    currently supported types are gif/image/text/xbm.
+;;  - a cons of 2 strings which specifies the path of an image to use
+;;    and other path of a text file to use if image isn't supported.
+;;    (cons "path/to/image/file/image.png" "path/to/text/file/text.txt").
+;;  - a list that can display an random banner,
+;;    supported values are: string (filepath), 'official, 'logo and integers.
+
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content t)
+;; vertically center content
+(setq dashboard-vertically-center-content t)
+
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-show-shortcuts nil)
+
+(setq dashboard-items '((recents   . 5)
+                        (bookmarks . 5)
+                        (projects  . 5)
+                        (agenda    . 5)
+                        (registers . 5)))
+
+(setq dashboard-startupify-list '(dashboard-insert-banner
+                                  dashboard-insert-newline
+                                  dashboard-insert-banner-title
+                                  dashboard-insert-newline
+                                  dashboard-insert-navigator
+                                  dashboard-insert-newline
+                                  dashboard-insert-init-info
+                                  dashboard-insert-items
+                                  dashboard-insert-newline
+                                  dashboard-insert-footer))
+
+(setq dashboard-heading-shorcut-format " [%s]")
+
+(setq dashboard-item-shortcuts '((recents   . "r")
+                                 (bookmarks . "m")
+                                 (projects  . "p")
+                                 (agenda    . "a")
+                                 (registers . "e")))
+
+(setq dashboard-display-icons-p t)     ; display icons on both GUI and terminal
+(setq dashboard-icon-type 'nerd-icons) ; use `nerd-icons' package
+
+(dashboard-modify-heading-icons '((recents   . "file-text")
+                                  (bookmarks . "book")))
+
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (c-set-style "linux")
+            (setq c-basic-offset 4)
+            (setq indent-tabs-mode t)))
+
+
+(add-to-list 'load-path "~/.emacs.d/copilot.el")
+(require 'copilot)
+
+(use-package editorconfig :ensure t)
+(use-package jsonrpc :ensure t)
+(use-package f :ensure t)
+
+(add-hook 'prog-mode-hook 'copilot-mode)
+
+(with-eval-after-load 'copilot
+  (define-key copilot-completion-map (kbd "<tab>") #'copilot-accept-completion)
+  (define-key copilot-completion-map (kbd "TAB") #'copilot-accept-completion)
+  (define-key copilot-completion-map (kbd "C-TAB") #'copilot-accept-completion-by-word)
+  (define-key copilot-completion-map (kbd "C-<tab>") #'copilot-accept-completion-by-word))
+
+(setq warning-minimum-level :error)
+

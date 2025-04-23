@@ -135,8 +135,26 @@ fi
 
 cd $repos_folder
 
+# Verificar si ya existe el repositorio de Emacs
+if [ -d "$repos_folder/emacs" ]; then
+    echo ":: El repositorio de Emacs ya existe. ¿Deseas eliminarlo y clonarlo de nuevo?"
+    read -p "(Yy/Nn): " yn
+    [[ "$yn" =~ [Yy] ]] && rm -rf "$repos_folder/emacs"
+fi
+# Check if Emacs is already installed
+if command -v emacs >/dev/null; then
+    echo ":: Emacs ya está instalado en el sistema."
+    read -p "¿Deseas reinstalarlo? (Yy/Nn): " yn
+    [[ "$yn" =~ [Nn] ]] && exit 0
+fi
+
+
 # Clone emacs
-git clone -b master git://git.sv.gnu.org/emacs.git
+if ! git clone -b master git://git.sv.gnu.org/emacs.git; then
+    echo "❌ Error clonando el repositorio de Emacs."
+    exit 1
+fi
+
 
 # Into folder emacs
 cd emacs
@@ -161,7 +179,7 @@ while true; do
             ;;
         [Nn]*)
             echo ":: Installation with 4 threads"
-            make -j4 bootstrap
+            make -j$(nproc) bootstrap
             ;;
         *)
             echo ":: Please answer yes or no."
