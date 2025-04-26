@@ -1172,7 +1172,8 @@ CUSTOM_ID of the entry is returned."
   ;; Asegurarse de que cualquier tema previamente activado esté desactivado primero; opcional
   (mapc #'disable-theme custom-enabled-themes)
   ;; Cargar el tema doom-acario-light
-  (load-theme 'doom-acario-light t)
+  (setq catppuccin-flavor 'latte)
+  (load-theme 'catppuccin :no-confirm)
   (setq loaded-theme-variant 'light)
   )
 
@@ -1182,7 +1183,9 @@ CUSTOM_ID of the entry is returned."
   ;; Asegurarse de que cualquier tema previamente activado esté desactivado primero; opcional
   (mapc #'disable-theme custom-enabled-themes)
   ;; Cargar el tema doom-acario-light
-  (load-theme 'doom-gruvbox t)
+  (setq catppuccin-flavor 'frappe)
+  (load-theme 'catppuccin :no-confirm)
+  (catppuccin-reload)
   (setq loaded-theme-variant 'dark)
   )
   
@@ -1269,7 +1272,6 @@ PATH, VAR y VALUE vienen de D-Bus."
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 (add-hook 'prog-mode-hook 'visual-line-mode)
-(load-theme 'catppuccin :no-confirm)
 
 
 ;;; COnfig Personal
@@ -1378,4 +1380,3 @@ PATH, VAR y VALUE vienen de D-Bus."
   (define-key copilot-completion-map (kbd "C-<tab>") #'copilot-accept-completion-by-word))
 
 (setq warning-minimum-level :error)
-
